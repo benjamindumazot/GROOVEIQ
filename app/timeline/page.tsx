@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { getServiceClient } from "@/lib/supabase";
 
 export const revalidate = 0;
 
@@ -9,6 +9,7 @@ export default async function TimelinePage({
 }) {
   const { scene: sceneFilter } = await searchParams;
 
+  const supabase = getServiceClient();
   const { data: scenes } = await supabase
     .from("scenes")
     .select("slug, name")

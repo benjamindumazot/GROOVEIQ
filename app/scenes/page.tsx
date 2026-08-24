@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { getServiceClient } from "@/lib/supabase";
 
 export const revalidate = 0;
 
 export default async function ScenesPage() {
+  const supabase = getServiceClient();
   const { data: scenes } = await supabase
     .from("scenes")
     .select("slug, name, city, era_start, era_end, anchor_venue, key_figures")

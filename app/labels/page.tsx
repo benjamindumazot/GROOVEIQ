@@ -1,8 +1,9 @@
-import { supabase } from "@/lib/supabase";
+import { getServiceClient } from "@/lib/supabase";
 
 export const revalidate = 0;
 
 export default async function LabelsPage() {
+  const supabase = getServiceClient();
   const { data: labels } = await supabase
     .from("labels")
     .select("slug, name, founding_story, founded_year, city, label_scenes(scenes(name))")

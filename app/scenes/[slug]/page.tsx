@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getServiceClient } from "@/lib/supabase";
 
 export const revalidate = 0;
 
@@ -20,6 +20,7 @@ export default async function ScenePage({
   const { slug } = await params;
   const { tab = "overview" } = await searchParams;
 
+  const supabase = getServiceClient();
   const { data: scene } = await supabase
     .from("scenes")
     .select("*")
