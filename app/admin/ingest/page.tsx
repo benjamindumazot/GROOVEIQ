@@ -1,6 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+
+type Source = {
+  source_title: string;
+  source_url: string | null;
+  source_type: string;
+  chunks: number;
+  created_at: string;
+};
 
 export default function IngestPage() {
   const [adminKey, setAdminKey] = useState("");
@@ -10,6 +18,26 @@ export default function IngestPage() {
   const [sourceType, setSourceType] = useState("article");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sources, setSources] = useState<Source[]>([]);
+  const [logError, setLogError] = useState<string | null>(null);
+
+  const fetchLog = useCallback(async (key: string) => {
+    if (!key) return;
+    const res = await fetch("/api/ingest-log", {
+      headers: { "x-admin-key": key },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setSources(data.sources ?? []);
+      setLogError(null);
+    } else {
+      setLogError("Could not load log.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (adminKey.length > 5) fetchLog(adminKey);
+  }, [adminKey, fetchLog]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,6 +70,7 @@ export default function IngestPage() {
         setUrl("");
         setText("");
         setTitle("");
+        fetchLog(adminKey);
       }
     } catch (err: any) {
       setStatus(`Error: ${err.message}`);
@@ -50,8 +79,17 @@ export default function IngestPage() {
     }
   }
 
+  const typeColors: Record<string, string> = {
+    article: "#6366f1",
+    book: "#f59e0b",
+    interview: "#10b981",
+    podcast: "#ec4899",
+    website: "#3b82f6",
+    raw_text: "#71717a",
+  };
+
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto", padding: "48px 24px" }}>
+    <div style={{ maxWidth: 760, margin: "0 auto", padding: "48px 24px" }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
         Knowledge Base Ingestion
       </h1>
@@ -153,6 +191,69 @@ export default function IngestPage() {
           </div>
         )}
       </form>
+
+      {/* Knowledge Base Log */}
+      <div style={{ marginTop: 48 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>
+          Knowledge Base
+        </h2>
+        <p style={{ color: "#71717a", fontSize: 13, marginBottom: 20 }}>
+          {sources.length} source{sources.length !== 1 ? "s" : ""} indexed
+          {sources.length > 0 && ` · ${sources.reduce((n, s) => n + s.chunks, 0)} total chunks`}
+        </p>
+
+        {logError && <p style={{ color: "#fca5a5", fontSize: 13 }}>{logError}</p>}
+
+        {sources.length === 0 && !logError && adminKey.length > 5 && (
+          <p style={{ color: "#52525b", fontSize: 13 }}>No sources ingested yet.</p>
+        )}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {sources.map((s, i) => (
+            <div
+              key={i}
+              style={{
+                background: "#18181b",
+                border: "1px solid #27272a",
+                borderRadius: 8,
+                padding: "12px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  padding: "2px 8px",
+                  borderRadius: 4,
+                  background: typeColors[s.source_type] ?? "#52525b",
+                  color: "#fff",
+                  flexShrink: 0,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {s.source_type}
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#e4e4e7", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {s.source_title}
+                </div>
+                {s.source_url && (
+                  <div style={{ fontSize: 12, color: "#71717a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {s.source_url}
+                  </div>
+                )}
+              </div>
+              <span style={{ fontSize: 12, color: "#52525b", flexShrink: 0 }}>
+                {s.chunks} chunk{s.chunks !== 1 ? "s" : ""}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
