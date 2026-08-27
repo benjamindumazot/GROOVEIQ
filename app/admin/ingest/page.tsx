@@ -59,7 +59,7 @@ export default function IngestPage() {
         Feed source material into GrooveIQ's knowledge base. Paste a URL or raw text — it'll be chunked, embedded, and indexed for the Ask feature.
       </p>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div>
           <label style={labelStyle}>Admin Key</label>
           <input
