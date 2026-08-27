@@ -66,9 +66,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  const warning =
+    url && rows.length < 5
+      ? `Only ${rows.length} chunk(s) extracted — the page may be paywalled, bot-blocked, or JavaScript-rendered. Consider pasting the text manually instead.`
+      : null;
+
   return NextResponse.json({
     ok: true,
     chunks_inserted: rows.length,
     source: sourceTitle,
+    warning,
   });
 }

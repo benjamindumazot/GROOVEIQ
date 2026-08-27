@@ -66,7 +66,8 @@ export default function IngestPage() {
       if (!res.ok) {
         setStatus(`Error: ${data.error}`);
       } else {
-        setStatus(`Done — ${data.chunks_inserted} chunks indexed from "${data.source}".`);
+        const msg = `Done — ${data.chunks_inserted} chunks indexed from "${data.source}".`;
+        setStatus(data.warning ? `${msg}\n\n⚠️ ${data.warning}` : msg);
         setUrl("");
         setText("");
         setTitle("");
@@ -182,9 +183,10 @@ export default function IngestPage() {
             style={{
               padding: "12px 16px",
               borderRadius: 8,
-              background: status.startsWith("Error") ? "#3f1515" : "#14532d",
-              color: status.startsWith("Error") ? "#fca5a5" : "#86efac",
+              background: status.startsWith("Error") ? "#3f1515" : status.includes("⚠️") ? "#422006" : "#14532d",
+              color: status.startsWith("Error") ? "#fca5a5" : status.includes("⚠️") ? "#fcd34d" : "#86efac",
               fontSize: 14,
+              whiteSpace: "pre-wrap",
             }}
           >
             {status}
