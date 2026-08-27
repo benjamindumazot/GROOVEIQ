@@ -74,7 +74,7 @@ export default function IngestPage() {
         <div>
           <label style={labelStyle}>Source URL <span style={{ color: "#71717a" }}>(optional if pasting text below)</span></label>
           <input
-            type="url"
+            type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://..."
