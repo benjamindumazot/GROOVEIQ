@@ -15,11 +15,12 @@ const CURATED_QUESTIONS = [
 
 export default function AskPage() {
   return (
-    <div className="px-6 py-10 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">Ask</h1>
-      <p className="text-zinc-400 text-sm mb-6">
-        Curated deep questions, or ask your own.
-      </p>
+    <div className="px-6 py-14 max-w-2xl mx-auto">
+      <div className="mb-10">
+        <p className="text-xs font-mono tracking-[0.3em] text-indigo-400 uppercase mb-3">Knowledge</p>
+        <h1 className="text-4xl font-black tracking-tight">Ask</h1>
+        <p className="text-zinc-500 mt-2 text-sm">Ask anything about the history, culture, and sound of electronic music.</p>
+      </div>
       <AskClient curatedQuestions={CURATED_QUESTIONS} />
     </div>
   );
