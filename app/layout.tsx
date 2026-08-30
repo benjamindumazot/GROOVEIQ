@@ -44,6 +44,7 @@ export default async function RootLayout({
               { href: "/scenes", label: "Scenes" },
               { href: "/timeline", label: "Timeline" },
               { href: "/labels", label: "Labels" },
+              { href: "/leaderboard", label: "Rankings" },
               { href: "/ask", label: "Ask" },
             ].map(({ href, label }) => (
               <Link

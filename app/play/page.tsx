@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import DailyChallenge from "./DailyChallenge";
 
+const MEDALS = ["🥇", "🥈", "🥉"];
+
 export const revalidate = 0;
 
 // Pick 5 questions deterministically by UTC date so everyone gets the same set
@@ -42,6 +44,13 @@ export default async function PlayPage() {
     .eq("user_id", user.id)
     .eq("challenge_date", today)
     .maybeSingle();
+
+  // Top 5 leaderboard preview
+  const { data: topPlayers } = await supabase
+    .from("profiles")
+    .select("id, display_name, xp, level")
+    .order("xp", { ascending: false })
+    .limit(5);
 
   // Fetch all questions + pick today's 5
   const { data: allQuestions } = await supabase
@@ -104,18 +113,39 @@ export default async function PlayPage() {
         </div>
       )}
 
+      {/* Leaderboard preview */}
+      {(topPlayers?.length ?? 0) > 0 && (
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-mono text-zinc-600 uppercase tracking-wider">Top players</p>
+            <Link href="/leaderboard" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+              Full rankings →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-zinc-800 overflow-hidden">
+            {topPlayers!.map((player, i) => {
+              const isMe = player.id === user.id;
+              return (
+                <div key={player.id} className={`flex items-center justify-between px-4 py-3 border-b border-zinc-800 last:border-0 ${isMe ? "bg-indigo-950/20" : ""}`}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-base w-6 text-center">{i < 3 ? MEDALS[i] : <span className="text-xs font-mono text-zinc-600">#{i + 1}</span>}</span>
+                    <span className={`text-sm font-semibold ${isMe ? "text-indigo-300" : "text-white"}`}>
+                      {player.display_name ?? "Anonymous"}{isMe && <span className="ml-1.5 text-xs text-zinc-600 font-normal">you</span>}
+                    </span>
+                  </div>
+                  <span className="text-sm font-bold text-indigo-400">{player.xp} XP</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Coming soon */}
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-dashed border-zinc-800 p-4">
-          <p className="text-xs font-mono text-zinc-700 uppercase tracking-wider mb-1">Coming soon</p>
-          <h3 className="text-sm font-bold text-zinc-400">Quests</h3>
-          <p className="text-xs text-zinc-600 mt-0.5">Multi-scene story arcs. Earn Specialist badges.</p>
-        </div>
-        <div className="rounded-xl border border-dashed border-zinc-800 p-4">
-          <p className="text-xs font-mono text-zinc-700 uppercase tracking-wider mb-1">Coming soon</p>
-          <h3 className="text-sm font-bold text-zinc-400">Leaderboard</h3>
-          <p className="text-xs text-zinc-600 mt-0.5">Global ranking + per-scene specialists.</p>
-        </div>
+      <div className="mt-6 rounded-xl border border-dashed border-zinc-800 p-4">
+        <p className="text-xs font-mono text-zinc-700 uppercase tracking-wider mb-1">Coming soon</p>
+        <h3 className="text-sm font-bold text-zinc-400">Quests</h3>
+        <p className="text-xs text-zinc-600 mt-0.5">Multi-scene story arcs. Earn Specialist badges.</p>
       </div>
 
       <div className="mt-6 pt-5 border-t border-zinc-900">
