@@ -19,8 +19,10 @@ type Props = {
 };
 
 type AnswerState = {
-  chosen: number;
-  correct: boolean;
+  question_id: string;
+  chosen_index: number;
+  correct_index: number;
+  difficulty: string;
 };
 
 export default function DailyChallenge({ questions, alreadyPlayed, lastScore }: Props) {
