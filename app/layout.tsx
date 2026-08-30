@@ -42,6 +42,7 @@ export default async function RootLayout({
             <Link href="/play" className="px-3 py-1.5 rounded-md text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/40 font-bold transition-all">Play</Link>
             {[
               { href: "/scenes", label: "Scenes" },
+              { href: "/quests", label: "Quests" },
               { href: "/timeline", label: "Timeline" },
               { href: "/labels", label: "Labels" },
               { href: "/leaderboard", label: "Rankings" },

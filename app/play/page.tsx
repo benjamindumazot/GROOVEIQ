@@ -141,11 +141,22 @@ export default async function PlayPage() {
         </div>
       )}
 
-      {/* Coming soon */}
-      <div className="mt-6 rounded-xl border border-dashed border-zinc-800 p-4">
-        <p className="text-xs font-mono text-zinc-700 uppercase tracking-wider mb-1">Coming soon</p>
-        <h3 className="text-sm font-bold text-zinc-400">Quests</h3>
-        <p className="text-xs text-zinc-600 mt-0.5">Multi-scene story arcs. Earn Specialist badges.</p>
+      {/* Quests teaser */}
+      <div className="mt-6">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-mono text-zinc-600 uppercase tracking-wider">Quests</p>
+          <Link href="/quests" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">All quests →</Link>
+        </div>
+        <Link href="/quests/origin-story" className="block rounded-xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-600 p-4 transition-all group">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">📦</span>
+            <div>
+              <p className="text-sm font-bold text-white group-hover:text-zinc-100">The Origin Story</p>
+              <p className="text-xs text-zinc-500 mt-0.5">From The Loft to The Warehouse — 6 questions, 3 scenes</p>
+            </div>
+            <span className="ml-auto text-zinc-600 group-hover:text-zinc-400 transition-colors">→</span>
+          </div>
+        </Link>
       </div>
 
       <div className="mt-6 pt-5 border-t border-zinc-900">
