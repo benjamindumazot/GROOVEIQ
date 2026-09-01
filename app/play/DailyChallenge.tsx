@@ -9,7 +9,7 @@ type Question = {
   correct_index: number;
   explanation: string | null;
   difficulty: string;
-  scenes?: { name: string } | null;
+  scenes?: { name: string }[] | { name: string } | null;
 };
 
 type Props = {
@@ -112,8 +112,10 @@ export default function DailyChallenge({ questions, alreadyPlayed, lastScore }: 
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-xs font-mono text-zinc-600 uppercase tracking-wider">Daily Challenge</p>
-          {q.scenes?.name && (
-            <p className="text-xs text-indigo-400 font-mono mt-0.5">{q.scenes.name}</p>
+          {q.scenes && (
+            <p className="text-xs text-indigo-400 font-mono mt-0.5">
+              {Array.isArray(q.scenes) ? q.scenes[0]?.name : (q.scenes as any)?.name}
+            </p>
           )}
         </div>
         <div className="flex items-center gap-2">
