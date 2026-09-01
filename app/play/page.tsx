@@ -79,7 +79,7 @@ export default async function PlayPage() {
             <>
               <span className="text-zinc-800">·</span>
               <span className="text-sm text-zinc-400">
-                🔥 <span className="text-white font-bold">{profile.streak_count}</span> day streak
+                🔥 <span className="text-white font-bold">{profile?.streak_count}</span> day streak
               </span>
             </>
           )}
